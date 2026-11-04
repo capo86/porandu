@@ -14,9 +14,9 @@ Plataforma web para **aplicar tests psicológicos y obtener los resultados autom
 | CHASIDE (Test de Orientación Vocacional) | `SÍ` / `NO` | 98 | https://forms.gle/UrpnH8BnGXiWi7te7 |
 | Eysenck (Inventario de Personalidad) | `SÍ` / `NO` | 57 | https://forms.gle/qHPqUFZLQ8HvSwEf6 |
 
-**Flujo del MVP:** la persona (paciente) se registra → elige un test → lo completa → ve su resultado calculado automáticamente → el resultado queda guardado.
+**Alcance actual:** los profesionales acceden con una cuenta creada manualmente en Supabase Auth. Los pacientes pueden retomar y completar intentos existentes mediante su enlace privado. La creación libre de intentos está deshabilitada hasta implementar la asignación por profesional. La corrección permanece pendiente de claves y baremos validados.
 
-**Fuera del MVP (después):** funcionalidades para profesionales de la salud (psicólogos): panel, asignación de tests a pacientes, revisión de resultados, informes. Solo se crea la **tabla** `professionals` ahora; no construir su UI todavía.
+**Después:** fichas y gestión de profesionales, pacientes, asignación de tests, revisión de resultados e informes. El panel profesional actual solo muestra la cuenta y permite cerrar sesión; la tabla `professionals` todavía no se utiliza para autorizar acceso a datos.
 
 **No hacer:** no agregar tests nuevos, pagos, chat, agenda ni nada fuera del MVP sin que se pida.
 
@@ -138,11 +138,11 @@ Reglas:
 
 ### Acceso (MVP)
 
-El paciente completa el test sin crear cuenta. Para no exponer las tablas al rol `anon`:
+El paciente retoma un intento existente sin crear cuenta. Para no exponer las tablas al rol `anon`:
 
-- Crear/consultar pacientes, intentos y resultados mediante **funciones RPC** (`security definer`) o Edge Functions que validen la entrada.
+- Consultar y actualizar intentos y resultados existentes mediante **funciones RPC** (`security definer`) o Edge Functions que validen la entrada. `start_test` no está habilitada para `anon` ni `authenticated`; no reabrirla hasta implementar asignaciones seguras.
 - El paciente accede a su resultado con un **token/UUID no adivinable** del intento, no con listados abiertos.
-- Los profesionales (más adelante) acceden con Supabase Auth y políticas RLS basadas en `auth.uid()`.
+- Los profesionales acceden con Supabase Auth. El aislamiento de pacientes por profesional y sus políticas RLS basadas en `auth.uid()` se implementarán junto con las asignaciones; una sesión por sí sola no da acceso a esos datos.
 
 ## 7. Cómo modelar los tests
 

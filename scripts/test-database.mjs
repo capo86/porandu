@@ -17,14 +17,19 @@ try {
     await rejected(`delete from public.${table}`, [], 'permission denied')
   }
   await rejected(`select public.validate_answers('eysenck',57,'{}'::jsonb,false)`, [], 'permission denied')
+  await rejected(`select public.start_test('eysenck','forms-v1',$1::jsonb,true)`, [JSON.stringify({ full_name: 'Fictitious test person' })], 'permission denied')
+  await db.exec('reset role')
   await rejected(`select public.start_test('eysenck','forms-v1',$1::jsonb,false)`, [JSON.stringify({ full_name: 'Fictitious test person' })], 'CONSENT_REQUIRED')
   await rejected(`select public.start_test('eysenck','forms-v1','{"full_name":"X"}'::jsonb,true)`, [], 'INVALID_NAME')
   await rejected(`select public.start_test('eysenck','forms-v1','{"full_name":"Test","email":"invalid"}'::jsonb,true)`, [], 'INVALID_EMAIL')
   await rejected(`select public.start_test('eysenck','forms-v1','{"full_name":"Test","birth_date":"2999-01-01"}'::jsonb,true)`, [], 'INVALID_BIRTH_DATE')
   await rejected(`select public.start_test('scl90','forms-v1','{"full_name":"Test"}'::jsonb,true)`, [], 'UNKNOWN_TEST_VERSION')
+  await db.exec('set role anon')
   await rejected(`select public.get_attempt('00000000-0000-4000-8000-000000000000')`, [], 'ATTEMPT_NOT_FOUND')
   for (const [code, count, values] of [['heymans', 30, ['X', 'Z']], ['chaside', 98, ['SI', 'NO']], ['eysenck', 57, ['SI', 'NO']]]) {
+    await db.exec('reset role')
     const { rows: [{ token }] } = await db.query(`select public.start_test($1,'forms-v1',$2::jsonb,true) as token`, [code, JSON.stringify({ full_name: 'Fictitious test person' })])
+    await db.exec('set role anon')
     assert.match(token, /^[a-f0-9-]{36}$/); checks++
     const { rows: [{ snapshot }] } = await db.query('select public.get_attempt($1) as snapshot', [token])
     assert.equal(snapshot.status, 'in_progress')
@@ -56,5 +61,6 @@ try {
   assert.equal(total, 3); checks++
   await db.exec('set role authenticated')
   await rejected('select * from public.patients', [], 'permission denied')
+  await rejected(`select public.start_test('eysenck','forms-v1',$1::jsonb,true)`, [JSON.stringify({ full_name: 'Fictitious test person' })], 'permission denied')
   console.log(`Database integration: ${checks} assertions passed (RLS, grants, validation, progress, revisions, completion, idempotency).`)
 } finally { await db.close() }

@@ -10,8 +10,8 @@ const tones = {
   eysenck: 'bg-[#e5e9ed] text-[#4f6476]',
 }
 const steps = [
-  ['Elegí tu punto de partida', 'Personalidad, carácter o vocación. Empezá por lo que hoy te da curiosidad.'],
-  ['Tomate un momento para vos', 'Completá tus datos, aceptá el consentimiento y respondé con tranquilidad.'],
+  ['Recibí tu enlace privado', 'Tu profesional te facilita el enlace correspondiente al cuestionario.'],
+  ['Tomate un momento para vos', 'Abrí el enlace y respondé con tranquilidad.'],
   ['Guardá tu recorrido', 'Con tu enlace privado podés retomar el test y consultar el estado del resultado.'],
 ]
 
@@ -35,7 +35,7 @@ export function Component() {
           <div className="flex flex-1 flex-col p-6"><h3 className="font-display text-[29px]">{test.name}</h3><p className="mt-2 mb-6 flex-1 text-sm leading-6 text-muted">{test.description}</p><div className="mb-5 flex items-center gap-2 text-xs text-muted"><Icon name="question" className="size-3.5" />{test.itemCount} preguntas<span className="mx-1 text-line">/</span>{test.code === 'heymans' ? 'Elegí X o Z' : 'Respuestas sí o no'}</div><Link to={`/tests/${test.code}`} aria-label={`Conocer el test ${test.name}`} className="flex min-h-11 items-center justify-between border-t border-line pt-4 text-sm font-medium text-forest">Conocer el test<Icon name="arrow" className="size-4 transition-transform group-hover:translate-x-1" /></Link></div>
         </article>)}
       </div>
-      <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-muted"><Icon name="question" className="mt-0.5 size-4" />La corrección está pendiente de validación profesional. Podés completar los cuestionarios; los puntajes estarán disponibles cuando se aprueben las claves.</p>
+      <p className="mt-5 flex items-start gap-2 text-xs leading-5 text-muted"><Icon name="question" className="mt-0.5 size-4" />Para completar un cuestionario necesitás un enlace de tu profesional. La corrección está pendiente de validación profesional.</p>
     </section>
     <section id="como-funciona" className="page-shell scroll-mt-8 pt-20 sm:pt-24"><div className="grid gap-10 border-t border-line pt-12 lg:grid-cols-[.9fr_1.4fr]"><div><p className="eyebrow mb-4">SENCILLO, DE PRINCIPIO A FIN</p><h2 className="max-w-sm font-display text-3xl leading-tight sm:text-[38px]">Un momento para vos,<br /><span className="text-forest italic">paso a paso.</span></h2><p className="mt-4 max-w-xs text-sm leading-6 text-muted">Buscá un lugar tranquilo. No necesitás prepararte: alcanza con responder con sinceridad.</p></div><ol className="space-y-7">{steps.map(([title, text], index) => <li key={title} className="flex gap-5"><span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-line font-display text-lg text-forest">{index + 1}</span><div><h3 className="mb-1 text-sm font-semibold">{title}</h3><p className="max-w-md text-sm leading-6 text-muted">{text}</p></div></li>)}</ol></div></section>
   </div>
