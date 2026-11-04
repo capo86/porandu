@@ -1,0 +1,2 @@
+-- Test catalog is versioned in the initial migration.
+-- Never seed personal data, answers, or fabricated clinical results.

@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'DM Sans', sans-serif;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --color-paper: #f8f7f2;
+  --color-ink: #263d34;
+  --color-forest: #245447;
+  --color-muted: #667167;
+  --color-line: #dce0d5;
+  --color-sage: #e5ebd9;
+  --color-clay: #b17a54;
+  --animate-enter: enter 650ms ease-out both;
+  @keyframes enter {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply m-0 bg-paper font-sans text-ink antialiased; }
+  button, a, input, select, summary { -webkit-tap-highlight-color: transparent; }
+  button:not(:disabled), summary { cursor: pointer; }
+  :focus-visible { @apply outline-2 outline-offset-4 outline-forest; }
+  ::selection { @apply bg-sage text-forest; }
+  [id] { scroll-margin-top: 1.5rem; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@layer components {
+  .page-shell { @apply mx-auto w-full max-w-[1192px] px-5 sm:px-8 lg:px-12; }
+  .narrow-shell { @apply mx-auto w-full max-w-[760px] px-5 sm:px-8; }
+  .page-title { @apply font-display text-4xl leading-[1.15] tracking-[-.025em] sm:text-5xl; }
+  .eyebrow { @apply text-[10px] font-semibold tracking-[.16em] text-forest sm:text-[11px]; }
+  .btn { @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-lg px-6 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-45; }
+  .btn-primary { @apply border border-forest bg-forest text-white hover:border-[#173b31] hover:bg-[#173b31]; }
+  .btn-secondary { @apply border border-forest/25 bg-transparent text-forest hover:border-forest/50 hover:bg-sage/50; }
+  .btn-ghost { @apply px-3 text-muted hover:bg-sage/50 hover:text-forest; }
+  .nav-link { @apply py-3 transition-colors hover:text-forest; }
+  .back-link { @apply inline-flex min-h-10 items-center gap-2 text-xs text-muted hover:text-forest; }
+  .pill { @apply inline-flex items-center gap-2 rounded-full border border-line px-3 py-1.5 text-xs text-muted; }
+  .field-label { @apply mb-2 block text-sm font-medium text-ink; }
+  .field-optional { @apply ml-1 text-xs font-normal text-muted; }
+  .field { @apply block min-h-12 w-full rounded-lg border border-line bg-paper/50 px-3 py-3 text-base text-ink placeholder:text-muted/70 focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/15 aria-invalid:border-red-400; }
+  .field-error { @apply mt-1 text-xs leading-5 text-red-800 empty:hidden; }
+}
